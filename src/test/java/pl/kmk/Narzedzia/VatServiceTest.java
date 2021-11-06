@@ -16,7 +16,7 @@ class VatServiceTest {
     @DisplayName("Should Count With Default Vat Value")
     void shouldCountDefaultGrossValue() throws Exception {
         //given
-        Product product = new Product(UUID.randomUUID(), new BigDecimal("20.00"));
+        Product product = generateProductWithPrice("20.00");
         BigDecimal expected = new BigDecimal("24.60");
         //when
         BigDecimal actual = vatService.getGrossPriceForDefaultVat(product);
@@ -29,7 +29,7 @@ class VatServiceTest {
     @DisplayName("Should Count with other Vat Value")
     void shouldCountGrossForDifferentValue() throws Exception {
         //given
-        Product product = new Product(UUID.randomUUID(), new BigDecimal("20.00"));
+        Product product = generateProductWithPrice("20.00");
         BigDecimal expected = new BigDecimal("24.00");
         //when
         BigDecimal actual = vatService.getGrossPrice(product.getNetValue(), new BigDecimal("0.20"));
@@ -41,12 +41,16 @@ class VatServiceTest {
     @DisplayName("should throw exeption")
     void shouldThrow(){
         //given
-        Product product=new Product(UUID.randomUUID(),new BigDecimal("12.00"));
+        Product product= generateProductWithPrice("12.00");
         //when
         //then
         assertThrows(Exception.class,()->
                 vatService.getGrossPrice(product.getNetValue(),BigDecimal.TEN));
 
+    }
+
+    private Product generateProductWithPrice(String s) {
+        return new Product(UUID.randomUUID(), new BigDecimal(s));
     }
 
 
