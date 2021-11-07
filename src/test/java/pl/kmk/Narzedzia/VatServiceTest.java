@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 class VatServiceTest {
@@ -39,15 +41,47 @@ class VatServiceTest {
 
     @Test
     @DisplayName("should throw exeption")
-    void shouldThrow(){
+    void shouldThrow() {
         //given
-        Product product= generateProductWithPrice("12.00");
+        Product product = generateProductWithPrice("12.00");
         //when
         //then
-        assertThrows(Exception.class,()->
-                vatService.getGrossPrice(product.getNetValue(),BigDecimal.TEN));
+        assertThrows(Exception.class, () ->
+                vatService.getGrossPrice(product.getNetValue(), BigDecimal.TEN));
 
     }
+
+    @Test
+    void shouldSort() {
+        //given
+        List<Product> productsActual = new ArrayList<>();
+        Product p1 = new Product(UUID.randomUUID(), new BigDecimal("10.00"));
+        Product p2 = new Product(UUID.randomUUID(), new BigDecimal("20.00"));
+        Product p3 = new Product(UUID.randomUUID(), new BigDecimal("30.00"));
+        System.out.println("BEFORE");
+        productsActual.add(p3);
+        productsActual.add(p2);
+        productsActual.add(p1);
+        productsActual.forEach(System.out::println);
+
+        System.out.println();
+        List<Product> productsExpected = new ArrayList<>();
+        productsExpected.add(p1);
+        productsExpected.add(p2);
+        productsExpected.add(p3);
+        productsExpected.forEach(System.out::println);
+        //when
+        productsActual.sort(Product.BY_NETVALUE);
+
+        System.out.println("AFTER");
+        productsActual.forEach(System.out::println);
+        //then
+
+
+        assertArrayEquals(productsExpected.toArray(), productsActual.toArray());
+
+    }
+
 
     private Product generateProductWithPrice(String s) {
         return new Product(UUID.randomUUID(), new BigDecimal(s));
