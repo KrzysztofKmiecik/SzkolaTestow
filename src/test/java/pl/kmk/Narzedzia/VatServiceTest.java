@@ -4,12 +4,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.*;
 
 class VatServiceTest {
     VatService vatService;
@@ -23,7 +25,8 @@ class VatServiceTest {
         //when
         BigDecimal actual = vatService.getGrossPriceForDefaultVat(product);
         //then
-        assertEquals(expected, actual);
+        assertThat(actual).isEqualTo(expected);
+        //  assertEquals(expected, actual);
     }
 
 
@@ -36,7 +39,8 @@ class VatServiceTest {
         //when
         BigDecimal actual = vatService.getGrossPrice(product.getNetValue(), new BigDecimal("0.20"));
         //then
-        assertEquals(expected, actual);
+        assertThat(actual).isEqualTo(expected);
+        //  assertEquals(expected, actual);
     }
 
     @Test
@@ -46,8 +50,11 @@ class VatServiceTest {
         Product product = generateProductWithPrice("12.00");
         //when
         //then
-        assertThrows(Exception.class, () ->
-                vatService.getGrossPrice(product.getNetValue(), BigDecimal.TEN));
+       /* assertThrows(Exception.class, () ->
+                vatService.getGrossPrice(product.getNetValue(), BigDecimal.TEN));*/
+
+        assertThatExceptionOfType(Exception.class).isThrownBy(
+                () -> vatService.getGrossPrice(product.getNetValue(), BigDecimal.TEN));
 
     }
 
