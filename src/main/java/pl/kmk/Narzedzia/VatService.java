@@ -4,25 +4,27 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 
 class VatService {
-    BigDecimal vatValue;
-    public VatService(){
-        vatValue=new BigDecimal("0.23");
+    VatProvider vatprovider;
+
+    public VatService(VatProvider vatProvider) {
+        this.vatprovider = vatProvider;
     }
 
-    public BigDecimal getGrossPriceForDefaultVat(Product product) throws Exception {
-        return getGrossPrice(product.getNetValue(),vatValue);
+    public BigDecimal getGrossPriceForDefaultVat(Product product) throws IncorrectVatPriceException {
+        return calculateGrossPrice(product.getNetPrice(), vatprovider.getDefaultVat());
     }
 
-    public BigDecimal getGrossPrice(BigDecimal netValue,BigDecimal vatValue) throws Exception {
-        MathContext m=new MathContext(4);
 
-        if (vatValue.compareTo(BigDecimal.ONE)==1){
-            throw new Exception("VAT needs to be lower");
+    public BigDecimal getGrossPrice(BigDecimal netValue, String productType) throws IncorrectVatPriceException {
+        BigDecimal vatValue = vatprovider.getVatByType(productType);
+        return calculateGrossPrice(netValue, vatValue);
+    }
 
+    private BigDecimal calculateGrossPrice(BigDecimal netPrice, BigDecimal vatValue) throws IncorrectVatPriceException {
+        MathContext m = new MathContext(4);
+        if (vatValue.compareTo(BigDecimal.ONE) == 1) {
+            throw new IncorrectVatPriceException("VAT needs to be lower");
         }
-
-        return netValue.multiply(vatValue.add(BigDecimal.ONE)).round(m);
+        return netPrice.multiply(vatValue.add(BigDecimal.ONE)).round(m);
     }
-
-
 }

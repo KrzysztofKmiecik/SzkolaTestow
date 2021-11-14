@@ -6,24 +6,26 @@ import java.util.UUID;
 
 class Product {
     private UUID id;
-    private BigDecimal netValue;
+    private BigDecimal netPrice;
+    private String type;
 
-    public Product (UUID id, BigDecimal netValue){
-        this.id=id;
-        this.netValue=netValue;
+    public Product(UUID id, BigDecimal netPrice, String type) {
+        this.id = id;
+        this.netPrice = netPrice;
+        this.type = type;
     }
 
-    public BigDecimal getNetValue(){
-        return netValue;
+    public BigDecimal getNetPrice(){
+        return netPrice;
     }
 
-    public static final Comparator<Product> BY_NETVALUE=Comparator.comparing(Product::getNetValue);
+    public static final Comparator<Product> BY_NETVALUE=Comparator.comparing(Product::getNetPrice);
 
     @Override
     public String toString() {
         return "Product{" +
                 "id=" + id +
-                ", netValue=" + netValue +
+                ", netValue=" + netPrice +
                 '}';
     }
 }
